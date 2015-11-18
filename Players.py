@@ -103,7 +103,7 @@ class LearningPlayer:
                 print '[WARN]: a board in', self.boards_file, 'had a non-integer value:', board
 
         self.known_boards = sorted(self.known_boards, key = self.num_free, reverse = True)
-        # print self.known_boards
+        print self.known_boards
 
     def num_free(self, board):
         num_free = 0
@@ -124,21 +124,17 @@ class PerfectPlayer:
         num_moves = 0;
         corner_move = False
 
-        # corners = ((0,0), (0,SIZE-1), (SIZE-1,0), (SIZE-1,SIZE-1))
+        corners = ((0,0), (0,SIZE-1), (SIZE-1,0), (SIZE-1,SIZE-1))
         center = SIZE**2/2
-        center_grid = (SIZE/2, SIZE/2)
-        center_taken = False
 
         for i in range(SIZE):
             for j in range(SIZE):
                 if board[i][j] != EMPTY:
                     num_moves += 1
-                    if (i,j) == center: center_taken = True
+                    if (i,j) in corners: corner_move = True
 
         if not num_moves: return 0
-        if num_moves == 1:
-            if not center_taken: return center
-            # else: return 0
+        if num_moves == 1 and corner_move: return center
 
         move = self.minimax(self.player, board, 0, -100, 100)
         return move
