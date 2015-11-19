@@ -68,6 +68,9 @@ class Controller:
 
         print '\n\nIt took', i, 'iterations but I learned all of the moves!\n\n'
 
+    def forget(self):
+        self.computer_player.forget()
+
     def get_position(self, x, y):
         return self.game.get_position(x, y)
 

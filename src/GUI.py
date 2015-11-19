@@ -41,13 +41,11 @@ class Display:
 
         self.update()
 
-    # run the guit
     def mainloop(self):
         self.app.mainloop()
 
-    # TODO
     def forget(self):
-        pass
+        self.game_controller.forget()
 
     def learn(self):
         self.game_controller.learn()

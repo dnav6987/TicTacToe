@@ -12,6 +12,11 @@ class LearningPlayer:
     def __init__(self, player):
         self.player = player
 
+        self.new_neural_net()
+
+        self.memories = Memories()
+
+    def new_neural_net(self):
         input_size = output_size = SIZE**2
 
         # TODO these parameters are all being played with
@@ -19,7 +24,6 @@ class LearningPlayer:
         self.net.set_learning_rate(.002)
         self.net.set_momentum(.8)
 
-        self.memories = Memories()
 
     # get the move from the neural network
     def make_move(self, board, learning = False):
@@ -86,6 +90,10 @@ class LearningPlayer:
             expected_output = [0 for i in range(SIZE) for j in range(SIZE)]
             expected_output[correct_move] = 1
             self.net.back_propagate(expected_output)    # this is where the 'learning' is done
+
+    # TODO right now it is just making a new random neural net. Maybe we should clear known_files as well?
+    def forget(self):
+        self.new_neural_net()
 
 class PerfectPlayer:
     def __init__(self, player):
