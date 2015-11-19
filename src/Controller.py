@@ -71,6 +71,8 @@ class Controller:
     def forget(self):
         self.computer_player.forget()
 
+        print '\n\nI just forgot how to play\n\n'
+
     def get_position(self, x, y):
         return self.game.get_position(x, y)
 
