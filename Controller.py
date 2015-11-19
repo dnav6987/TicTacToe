@@ -15,9 +15,14 @@ class Controller:
         self.gui = Display(self)
         self.gui.mainloop()
 
+        self.make_first_move()
+
     def reset(self):
         self.curr_player = X
         self.game = Game()
+
+    def self.make_first_move():
+        pass
 
     def make_move(self, x, y):
         if self.get_position(x,y) == EMPTY and self.game.set_position(self.curr_player, x, y):
@@ -29,8 +34,8 @@ class Controller:
                 self.get_computer_move()
 
     def get_computer_move(self):
-        move = self.perfect_player.make_move(self.game.board)
-        # move = self.computer_player.make_move(self.curr_player, self.game.board)
+        # move = self.perfect_player.make_move(self.game.board)
+        move = self.computer_player.make_move(self.curr_player, self.game.board)
 
         y = move/SIZE
         x = move%SIZE
@@ -44,10 +49,17 @@ class Controller:
 
     def learn(self):
         print '\n\nLearning\n\n'
-        for i in range(5000):
-            self.computer_player.train_on_all_known_boards()    # TODO set who is which player
+
+        for i in range(20000):
+            self.computer_player.learn_all_known_boards()    # TODO set who is which player
+            
             print 'Pass', i, 'correct_moves:', self.computer_player.passed_moves, 'incorrect moves:', self.computer_player.failed_moves
-            if not self.computer_player.failed_moves: break
+            
+            if not self.computer_player.failed_moves:
+                num_passes = i
+                break
+
+        print '\n\nIt took', i, 'iterations but I learned all of the moves!\n\n'
 
     def get_position(self, x, y):
         return self.game.get_position(x, y)
