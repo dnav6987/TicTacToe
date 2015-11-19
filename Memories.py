@@ -33,18 +33,18 @@ class Memories:
         return self.memories[tuple(board)]
 
     # add the memory and write it out to the file. -1 means no known move yet
-    def make_new_memory(self, board):
+    def make_new_memory(self, board, from_long_term_mem=False):
         self.memories[tuple(board)] = -1
 
-        with open(self.file_name, "a") as boards:
-            boards.write('\n')
-            boards.write(' '.join(str(i) for i in board))
+        if not from_long_term_mem: self.long_term_potentiation(board)
 
     # if there is a memory of this board do nothing, otherwise add it to memory
-    def observe(self, board):
+    def observe(self, board, from_long_term_mem=False):
         if tuple(board) in self.get_memories(): return
 
-        else: self.make_new_memory(board)
+        else: self.make_new_memory(board, from_long_term_mem)
+
+        print board
             
     # load all of the memory from the file
     def remember(self):
@@ -57,6 +57,12 @@ class Memories:
             this_board = board.split()
             try:
                 this_board = [int(i) for i in this_board]
-                self.observe(this_board)
+                self.observe(this_board, True)
             except ValueError:
                 print '[WARN]: a board in', self.file_name, 'had a non-integer value:', board
+
+    # put it in long term memory, i.e. right to file
+    def long_term_potentiation(board):
+        with open(self.file_name, "a") as boards:
+            boards.write('\n')
+            boards.write(' '.join(str(i) for i in board))
