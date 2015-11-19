@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 from GUI import Display
 from GameState import Game
 from Constants import EMPTY, X, O, SIZE
