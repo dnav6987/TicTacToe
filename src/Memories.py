@@ -2,7 +2,7 @@ from Constants import EMPTY
 
 class Memories:
     def __init__(self):
-        self.file_name = 'known_boards.txt'
+        self.file_name = '/home/dnav/Desktop/TicTacToe/src/known_boards.txt'
 
         # how we'll store memories. Key is a board, value is the associate move
         self.memories = {}
@@ -49,7 +49,7 @@ class Memories:
         try:
             boards = open(self.file_name)
         except IOError:
-            print 'could not find memory in known_boards.txt'
+            print '\n\n[ERR]: could not find memory in known_boards.txt\n\n'
 
         for board in boards:
             this_board = board.split()
