@@ -44,8 +44,6 @@ class Memories:
 
         else: self.make_new_memory(board, from_long_term_mem)
 
-        print board
-            
     # load all of the memory from the file
     def remember(self):
         try:
@@ -62,7 +60,7 @@ class Memories:
                 print '[WARN]: a board in', self.file_name, 'had a non-integer value:', board
 
     # put it in long term memory, i.e. right to file
-    def long_term_potentiation(board):
+    def long_term_potentiation(self, board):
         with open(self.file_name, "a") as boards:
             boards.write('\n')
             boards.write(' '.join(str(i) for i in board))

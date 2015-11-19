@@ -3,6 +3,8 @@ from GameState import Game
 from Constants import EMPTY, X, O, SIZE
 from Players import LearningPlayer, PerfectPlayer
 
+# TODO i want to be able to choose if computer player goes first
+
 class Controller:
     def __init__(self):
         self.curr_player = X
@@ -15,14 +17,9 @@ class Controller:
         self.gui = Display(self)
         self.gui.mainloop()
 
-        self.make_first_move()
-
     def reset(self):
         self.curr_player = X
         self.game = Game()
-
-    def make_first_move(self):
-        pass
 
     def make_move(self, x, y):
         if self.get_position(x,y) == EMPTY and self.game.set_position(self.curr_player, x, y):
@@ -35,7 +32,7 @@ class Controller:
 
     def get_computer_move(self):
         # move = self.perfect_player.make_move(self.game.board)
-        move = self.computer_player.make_move(self.curr_player, self.game.board)
+        move = self.computer_player.make_move(self.game.board)
 
         y = move/SIZE
         x = move%SIZE
