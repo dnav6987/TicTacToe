@@ -7,7 +7,7 @@ class Controller:
     def __init__(self):
         self.curr_player = X
 
-        self.computer_player = LearningPlayer()
+        self.computer_player = LearningPlayer(O)
         self.perfect_player = PerfectPlayer(O)
 
         self.game = Game()
@@ -21,7 +21,7 @@ class Controller:
         self.curr_player = X
         self.game = Game()
 
-    def self.make_first_move():
+    def make_first_move(self):
         pass
 
     def make_move(self, x, y):

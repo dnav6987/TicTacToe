@@ -9,7 +9,9 @@ from copy import deepcopy
 # try with doubling the input nodes again hidden (15-60)
 
 class LearningPlayer:
-    def __init__(self):
+    def __init__(self, player):
+        self.player = player
+
         input_size = output_size = SIZE**2
 
         # TODO these parameters are all being played with
@@ -20,9 +22,12 @@ class LearningPlayer:
         self.memories = Memories()
 
     # get the move from the neural network
-    def make_move(self, player, board, learning = False):
+    def make_move(self, board, learning = False):
         # flatten the board from a grid to 1D for the neural network
-        inputs = [player*board[j][i] for i in range(SIZE) for j in range(SIZE)]
+        if learning:
+            inputs = [board[j][i] for i in range(SIZE) for j in range(SIZE)]
+        else:
+            inputs = [self.player*board[j][i] for i in range(SIZE) for j in range(SIZE)]
 
         self.memories.observe(inputs)
 
@@ -68,11 +73,11 @@ class LearningPlayer:
                 correct_move = perfect_player.make_move(grid_board)
                 self.memories.learn_move(board, correct_move)
 
-            self.learn_move(X, grid_board, correct_move) # learn the move
+            self.learn_move(grid_board, correct_move) # learn the move
 
     # have the neural network 'learn' a move
-    def learn_move(self, player, board, correct_move):
-        my_move = self.make_move(1, board, True)    # the neural nets move
+    def learn_move(self, board, correct_move):
+        my_move = self.make_move(board, True)    # the neural nets move
 
         if my_move == correct_move: self.passed_moves += 1 # it got it right!
 
