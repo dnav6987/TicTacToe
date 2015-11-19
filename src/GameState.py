@@ -1,7 +1,5 @@
 from Constants import EMPTY, X, O, SIZE, WINNING_BOARDS
 
-# TODO, none of the player logic should be here. the controller should take care of that, even the switching
-
 class Game:
     def __init__(self):
         # the game board. all positions initially empty
@@ -13,7 +11,6 @@ class Game:
         return self.board[x][y]
 
     def set_position(self, player, x, y):
-        # TODO maybe the checks should go in the controller, maybe not
         # is it a valid player?
         if player != X and player != O:
             return False
@@ -27,11 +24,11 @@ class Game:
 
         return True
 
-    def board_full1(self):
-        return self.num_moves == SIZE**2
+    def is_full(self):
+        return self.num_moves >= SIZE**2
 
     # have we won (or tied)?
-    def winner1(self):
+    def has_winner(self):
         # does this board match a winning board?
         for position in WINNING_BOARDS:
             # which player is in each possible winning position
@@ -71,3 +68,17 @@ class Game:
     @staticmethod
     def game_over(board):
         return (Game.winner(board) or Game.board_full(board))
+
+    # take a 2D grid and convert it to a 1D list
+    @staticmethod
+    def flatten(board, multiplier=1):
+        return [board[j][i]*multiplier for i in range(SIZE) for j in range(SIZE)]
+
+    # take a 1D list and convert it to a 2D grid. 
+    @staticmethod
+    def unflatten(board, multiplier=1):
+        grid_board = [[0 for j in range(SIZE)] for i in range(SIZE)]
+        for i in range(len(board)):
+            grid_board[i%SIZE][i/SIZE] = board[i]*multiplier
+
+        return grid_board

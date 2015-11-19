@@ -111,14 +111,17 @@ class NeuralNetwork:
                 # TODO, why is this?
                 self.thresholds[layer][neuron] -= self.learning_rate * self.error_gradients[layer][neuron]
 
-
+    # activation function is hyperbolic tan
     def activation_func(self, val):
         return math.tanh(val)
 
+    # TODO this is actually sech^2, why is that???
+    # inverse activation function is hyperbolic sec. sech^2(x) = 1 - tanh^2(x)
     def inverse_activation_func(self, val):
         temp = math.tanh(val)
         return (1 - (temp**2))
 
+    # test the neural network by learning some binary logical operators
     @staticmethod
     def test(num_iterations):
         print '\n\nTesting Neural Net on Truth Table\n\n'
@@ -207,5 +210,3 @@ class NeuralNetwork:
                 NN.forward_propagate()
 
                 print 'in: ', inputs, 'out: ', NN.get_output(), 'expected:', expected, '\n'
-
-# NeuralNetwork.test(10000)

@@ -25,9 +25,9 @@ class LearningPlayer:
     def make_move(self, board, learning = False):
         # flatten the board from a grid to 1D for the neural network
         if learning:
-            inputs = [board[j][i] for i in range(SIZE) for j in range(SIZE)]
+            inputs = Game.flatten(board)
         else:
-            inputs = [self.player*board[j][i] for i in range(SIZE) for j in range(SIZE)]
+            inputs = Game.flatten(board, self.player)
 
         self.memories.observe(inputs)
 
@@ -61,9 +61,7 @@ class LearningPlayer:
 
         for board in self.memories.get_memories():
             # build a grid out of a flattened board
-            grid_board = [[0 for j in range(SIZE)] for i in range(SIZE)]
-            for i in range(len(board)):
-                grid_board[i%SIZE][i/SIZE] = board[i]
+            grid_board = Game.unflatten(board)
 
             # don't recompute move, if it's already be calculated
             if self.memories.remember_move(board) >= 0:

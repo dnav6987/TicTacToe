@@ -3,3 +3,5 @@
 python /home/dnav/Desktop/TicTacToe/src/Controller.py
 
 rm /home/dnav/Desktop/TicTacToe/src/*.pyc
+# rm /home/dnav/Desktop/TicTacToe/src/known_boards.txt
+# touch rm /home/dnav/Desktop/TicTacToe/src/known_boards.txt
