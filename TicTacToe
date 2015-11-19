@@ -1,0 +1,5 @@
+#!/bin/bash
+
+python /home/dnav/Desktop/TicTacToe/src/Controller.py
+
+rm /home/dnav/Desktop/TicTacToe/src/*.pyc
