@@ -1,5 +1,5 @@
 import math
-from random import random, seed
+from random import random
 
 # Feed forward, back propagation neural network. Highly influenced by a Ron Cemer
 # blog post (http://roncemer.com/software-development/tic-tac-toe-an-experiment-in-machine-learning/).
@@ -19,9 +19,6 @@ class NeuralNetwork:
 
         self.momentum = 0.8
         self.learning_rate = 0.2
-
-        # TODO
-        # seed(2)
 
         # initalize the lists of data
 
@@ -109,15 +106,14 @@ class NeuralNetwork:
 
                     self.last_weight_changes[layer-1][prev_neuron][neuron] = weight_change
 
-                # TODO, why is this?
+                # set the threshold
                 self.thresholds[layer][neuron] -= self.learning_rate * self.error_gradients[layer][neuron]
 
     # activation function is hyperbolic tan
     def activation_func(self, val):
         return math.tanh(val)
 
-    # TODO this is actually sech^2, why is that???
-    # inverse activation function is hyperbolic sec. sech^2(x) = 1 - tanh^2(x)
+    # inverse activation function. sech^2(x): sech^2(x) + tanh^2(x) = 1
     def inverse_activation_func(self, val):
         temp = math.tanh(val)
         return (1 - (temp**2))
