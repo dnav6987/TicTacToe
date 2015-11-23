@@ -63,7 +63,7 @@ class Display:
             self.winner.destroy()
             self.winner = None
 
-        # TODO this is for OSX
+        # reenable the board
         for x in range(SIZE):
             for y in range(SIZE):
                 self.buttons[x][y]['state'] = 'normal'
@@ -87,17 +87,9 @@ class Display:
 
     # update a single button
     def update_button(self, x, y):
-        # conver the board position value to a string
+        # convert the board position value to a string
         text = STRINGS[self.game_controller.get_position(x, y)]
         self.buttons[x][y]['text'] = text
-        # self.buttons[x][y]['disabledforeground'] = 'black'
-
-        # TODO commented out for macs
-        # disable a button if it is a position that has already been taken
-        # if text == STRINGS[EMPTY]:
-        #     self.buttons[x][y]['state'] = 'normal'
-        # else:
-        #     self.buttons[x][y]['state'] = 'disabled'        
 
     # game has ended. disable the board and display the results
     def game_over(self, winner):
