@@ -42,18 +42,11 @@ class Display:
         self.update()
 
         # the score labels
-        self.scores = []
+        score = Label(self.app, text='SCORE:', font=self.font)
+        score.grid(row=0, column=0, columnspan=SIZE, sticky="WE")
 
-        self.scores.append(Label(self.app, text='SCORE:', font=self.font))
-        self.scores[0].grid(row=0, column=0, columnspan=SIZE, sticky="WE")
-
-        self.x_wins = 0
-        self.o_wins = 0
-
-        self.scores.append(Label(self.app, text=str(self.x_wins), font=self.font))
-        self.scores[1].grid(row=1, column=0, columnspan=1, sticky="WE")
-        self.scores.append(Label(self.app, text=str(self.o_wins), font=self.font))
-        self.scores[2].grid(row=1, column=2, columnspan=1, sticky="WE")
+        self.score = Label(self.app, text='0', font=self.font)
+        self.score.grid(row=1, column=1, columnspan=1, sticky="WE")
 
     def mainloop(self):
         self.app.mainloop()
@@ -113,20 +106,25 @@ class Display:
             for y in range(SIZE):
                 self.buttons[x][y]['state'] = 'disabled'
 
+        # update the score
+        score = int(self.score['text'])
+
         # display the result of the game
-        if winner == 1:
+        if winner == X:
             winner_str = '1'
-        else:
+            score += 2
+        elif winner == O:
             winner_str = '2'
+            score -= 2
 
         if winner == None:
             self.winner = Label(self.app, text="TIE", font=self.font)
+            score -= 1
         else:
             text = 'Player', winner_str, 'Wins!'
             self.winner = Label(self.app, text=text, font=self.font)
 
-            # update the score
-            prev_score = int(self.scores[winner]['text'])
-            self.scores[winner]['text'] = str(prev_score+1)
-
         self.winner.grid(row=1, column=3*SIZE, columnspan=SIZE, sticky="WE")
+
+        # display the score
+        self.score['text'] = str(score)
