@@ -1,8 +1,16 @@
 from Constants import EMPTY
+import sys
+import os
 
 class Memories:
     def __init__(self):
-        self.file_name = '/home/dnav/Desktop/TicTacToe/src/known_boards.txt'
+        self.file_name = '/known_boards.txt'
+
+        # get the path the the memory file
+        encoding = sys.getfilesystemencoding()
+        path = os.path.dirname(unicode(__file__, encoding))
+
+        self.file_name = path + self.file_name
 
         # how we'll store memories. Key is a board, value is the associate move
         self.memories = {}
