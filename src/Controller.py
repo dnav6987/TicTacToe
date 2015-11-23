@@ -5,8 +5,6 @@ from GameState import Game
 from Constants import EMPTY, X, O, SIZE
 from Players import LearningPlayer, PerfectPlayer
 
-# TODO i want to be able to choose if computer player goes first
-
 class Controller:
     def __init__(self):
         self.curr_player = X    # whose turn is it?

@@ -4,10 +4,6 @@ from GameState import Game
 from Memories import Memories
 from copy import deepcopy
 
-# TODO
-# try hidden units 5, 10, 15 ,20, 25, 30
-# try with doubling the input nodes again hidden (15-60)
-
 class LearningPlayer:
     def __init__(self, player):
         self.player = player
@@ -16,10 +12,11 @@ class LearningPlayer:
 
         self.memories = Memories()
 
+    # make a new neural net. The number of hidden nodes, learning rate and momentum
+    # were found experimentally.
     def new_neural_net(self):
         input_size = output_size = SIZE**2
 
-        # TODO these parameters are all being played with
         self.net = NeuralNetwork([input_size, 20, output_size])
         self.net.set_learning_rate(.002)
         self.net.set_momentum(.8)
@@ -60,7 +57,7 @@ class LearningPlayer:
     def learn_all_known_boards(self):
         self.passed_moves = self.failed_moves = 0
 
-        # TODO for now we always work in the reference frame of X
+        # solve from the reference frame of the X player
         perfect_player = PerfectPlayer(X)
 
         for board in self.memories.get_memories():
@@ -91,7 +88,6 @@ class LearningPlayer:
             expected_output[correct_move] = 1
             self.net.back_propagate(expected_output)    # this is where the 'learning' is done
 
-    # TODO right now it is just making a new random neural net. Maybe we should clear known_files as well?
     def forget(self):
         self.new_neural_net()
 
@@ -101,32 +97,6 @@ class PerfectPlayer:
 
     # the move is decided using a minimax algorithm with alpha beta pruning
     def make_move(self, board):
-        # num_moves = 0; # how many moves have been made?
-
-        # corners = ((0,0), (0,SIZE-1), (SIZE-1,0), (SIZE-1,SIZE-1))  # list of the corner positions
-        # corner_move = False # was there a corner move?
-
-        # center = SIZE**2/2  # center of the board
-
-        # # TODO, this is not nice. Essentially I observed what the minimax did in
-        # # each scenario and hard coded it here
-        # # sides = {(1,0) : 0, (0,1) : 0, (1,2) : 6, (2,1) : 3}
-        # # side_move = False, -1
-
-
-        # for i in range(SIZE):
-        #     for j in range(SIZE):
-        #         if board[i][j] != EMPTY:
-        #             num_moves += 1
-        #             if (i,j) in corners: corner_move = True
-        #             # if (i,j) in sides.keys(): side_move = (True, sides[(i,j)])
-
-        # if not num_moves: return 0
-        # if num_moves == 1:
-        #     if corner_move: return center
-        #     # if side_move[0]: return side_move[1]
-        #     # return 0
-
         move = self.minimax(self.player, board, 0, -100, 100)
         return move
 
