@@ -20,7 +20,8 @@ class NeuralNetwork:
         self.momentum = 0.8
         self.learning_rate = 0.2
 
-        seed(2)
+        # TODO
+        # seed(2)
 
         # initalize the lists of data
 
