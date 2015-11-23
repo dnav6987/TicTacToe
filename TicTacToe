@@ -1,8 +1,13 @@
 #!/bin/bash
 
-gnome-terminal -e /home/dnav/Desktop/TicTacToe/src/Controller.py
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	osascript -e 'tell app "Terminal"
+    	do script "python /Users/dnavarro/Desktop/TicTacToe/src/Controller.py"
+	end tell'
+elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+	gnome-terminal -e /home/dnav/Desktop/TicTacToe/src/Controller.py
 
-rm /home/dnav/Desktop/TicTacToe/src/*.pyc
+else
+	echo This program only runs on OSX and Linux
 
-# rm /home/dnav/Desktop/TicTacToe/src/known_boards.txt
-# touch rm /home/dnav/Desktop/TicTacToe/src/known_boards.txt
+fi
