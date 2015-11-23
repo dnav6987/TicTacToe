@@ -20,26 +20,40 @@ class Display:
         for x in range(SIZE):
             for y in range(SIZE):
                 handler = lambda x=x, y=y: self.move(x,y)   # each button corresponds to making a move in that square
-                button = Button(self.app, command=handler, font=self.font, width=8, height=4)
-                button.grid(row=y, column=x)
+                button = Button(self.app, command=handler, font=self.font, width=1, height=1)
+                button.grid(row=y, column=x+SIZE)
                 self.buttons[x][y] = button
         
         # button to reset the board
         handler = lambda: self.reset()
         button = Button(self.app, text='reset', command=handler, height=4)
-        button.grid(row=SIZE+1, column=0, columnspan=1, sticky="WE")
+        button.grid(row=SIZE+1, column=SIZE, columnspan=1, sticky="WE")
 
         # button that makes the machine learn
         handler = lambda: self.learn()
         button = Button(self.app, text='learn', command=handler, height=4)
-        button.grid(row=SIZE+1, column=SIZE/2, columnspan=1, sticky="WE")
+        button.grid(row=SIZE+1, column=SIZE+SIZE/2, columnspan=1, sticky="WE")
 
         # button that causes the machine to forget how to play
         handler = lambda: self.forget()
         button = Button(self.app, text='forget', command=handler, height=4)
-        button.grid(row=SIZE+1, column=SIZE-1, columnspan=1, sticky="WE")
+        button.grid(row=SIZE+1, column=2*SIZE-1, columnspan=1, sticky="WE")
 
         self.update()
+
+        # the score labels
+        self.scores = []
+
+        self.scores.append(Label(self.app, text='SCORE:', font=self.font))
+        self.scores[0].grid(row=0, column=0, columnspan=SIZE, sticky="WE")
+
+        self.x_wins = 0
+        self.o_wins = 0
+
+        self.scores.append(Label(self.app, text=str(self.x_wins), font=self.font))
+        self.scores[1].grid(row=1, column=0, columnspan=1, sticky="WE")
+        self.scores.append(Label(self.app, text=str(self.o_wins), font=self.font))
+        self.scores[2].grid(row=1, column=2, columnspan=1, sticky="WE")
 
     def mainloop(self):
         self.app.mainloop()
@@ -55,6 +69,11 @@ class Display:
         if self.winner != None:
             self.winner.destroy()
             self.winner = None
+
+        # TODO this is for OSX
+        for x in range(SIZE):
+            for y in range(SIZE):
+                self.buttons[x][y]['state'] = 'normal'
 
         self.game_controller.reset()
 
@@ -78,13 +97,14 @@ class Display:
         # conver the board position value to a string
         text = STRINGS[self.game_controller.get_position(x, y)]
         self.buttons[x][y]['text'] = text
-        self.buttons[x][y]['disabledforeground'] = 'black'
+        # self.buttons[x][y]['disabledforeground'] = 'black'
 
+        # TODO commented out for macs
         # disable a button if it is a position that has already been taken
-        if text == STRINGS[EMPTY]:
-            self.buttons[x][y]['state'] = 'normal'
-        else:
-            self.buttons[x][y]['state'] = 'disabled'        
+        # if text == STRINGS[EMPTY]:
+        #     self.buttons[x][y]['state'] = 'normal'
+        # else:
+        #     self.buttons[x][y]['state'] = 'disabled'        
 
     # game has ended. disable the board and display the results
     def game_over(self, winner):
@@ -105,4 +125,8 @@ class Display:
             text = 'Player', winner_str, 'Wins!'
             self.winner = Label(self.app, text=text, font=self.font)
 
-        self.winner.grid(row=1, column=0, columnspan=SIZE, sticky="WE")
+            # update the score
+            prev_score = int(self.scores[winner]['text'])
+            self.scores[winner]['text'] = str(prev_score+1)
+
+        self.winner.grid(row=1, column=3*SIZE, columnspan=SIZE, sticky="WE")
