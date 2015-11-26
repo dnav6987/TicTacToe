@@ -6,7 +6,7 @@ EMPTY = 0
 X = 1
 
 # cast enumerated types to strings
-STRINGS = {EMPTY : '', X : 'X', O : 'O'}
+STRINGS = {EMPTY : '', X : 'X', O : 'O', 'X' : X, 'O' : O}
 
 # possible winning combinations
 WINNING_BOARDS = (
