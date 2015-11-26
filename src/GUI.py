@@ -1,4 +1,4 @@
-from Tkinter import Tk, Button, Label
+from Tkinter import Tk, Button, Label, OptionMenu, StringVar
 from tkFont import Font
 
 from Constants import EMPTY, X, O, SIZE, STRINGS
@@ -20,36 +20,77 @@ class Display:
         for x in range(SIZE):
             for y in range(SIZE):
                 handler = lambda x=x, y=y: self.move(x,y)   # each button corresponds to making a move in that square
-                button = Button(self.app, command=handler, font=self.font, width=1, height=1)
-                button.grid(row=y, column=x+SIZE)
-                self.buttons[x][y] = button
+                self.buttons[x][y] = self.make_button(text='', command=handler, row=y, column=x+SIZE, width=1,)
         
         # button to reset the board
-        handler = lambda: self.reset()
-        button = Button(self.app, text='reset', command=handler, height=4)
-        button.grid(row=SIZE+1, column=SIZE, columnspan=1, sticky="WE")
-
+        self.make_button(text='new game', command=lambda:self.reset(), row=SIZE+1, column=SIZE)
         # button that makes the machine learn
-        handler = lambda: self.learn()
-        button = Button(self.app, text='learn', command=handler, height=4)
-        button.grid(row=SIZE+1, column=SIZE+SIZE/2, columnspan=1, sticky="WE")
-
+        self.make_button(text='learn', command=lambda:self.learn(), row=SIZE+1, column=SIZE+SIZE/2)
         # button that causes the machine to forget how to play
-        handler = lambda: self.forget()
-        button = Button(self.app, text='forget', command=handler, height=4)
-        button.grid(row=SIZE+1, column=2*SIZE-1, columnspan=1, sticky="WE")
+        self.make_button(text='forget', command=lambda:self.forget(), row=SIZE+1, column=2*SIZE-1)
 
         self.update()
 
         # the score labels
-        score = Label(self.app, text='SCORE:', font=self.font)
-        score.grid(row=0, column=0, columnspan=SIZE, sticky="WE")
-
+        score = Label(self.app, text='    SCORE:', font=self.font)
+        score.grid(row=0, column=0, columnspan=SIZE)
         self.score = Label(self.app, text='0', font=self.font)
-        self.score.grid(row=1, column=1, columnspan=1, sticky="WE")
+        self.score.grid(row=1, column=1)
+
+        # choose if you are X or O. X always goes first
+        self.player_choice = StringVar()    # how to keep track of the option
+        which_player = OptionMenu(self.app, self.player_choice, *(STRINGS[X], STRINGS[O])) # options are X and O
+        which_player.grid(row=SIZE+1,column=0)
+        self.player_choice.set('X')
+        self.player_choice.trace('w', self.choose_player)
+
+        # choose between playing against a Perfect player or Learning player
+        self.comp_type = StringVar()    # how to keep track of the option
+        comp_type = OptionMenu(self.app, self.comp_type, *('learning', 'perfect'))
+        comp_type.grid(row=SIZE+1, column=1)
+        comp_type.config(width=8)
+        self.comp_type.set('learning')
+        self.comp_type.trace('w', self.choose_comp_type)
 
     def mainloop(self):
         self.app.mainloop()
+
+    # make a new button
+    def make_button(self, text, command, row, column, width=None):
+        if width: button = Button(self.app, text=text, command=command, width=width)
+        else: button = Button(self.app, text=text, command=command)
+        button.grid(row=row, column=column, columnspan=1)
+        return button
+
+    # choose if you will be X or O player
+    def choose_player(self, *args):
+        if hasattr(self, 'prev_player'):    # only returns false first time
+            if self.player_choice.get() != self.prev_player:    # only do something if the choice has changed
+                self.prev_player = self.player_choice.get()     # get the choice
+
+                self.game_controller.set_player(self.prev_player)   # set the player
+                self.reset()    # new game. Can't switch player mid game
+
+        else:
+            self.prev_player = self.player_choice.get() # get the choice
+
+            if self.prev_player == STRINGS[O]:  # this is the first time so only has changed if it switched to O
+                self.game_controller.set_player(self.prev_player)
+                self.reset()
+
+    # choose between playing against a perfect player or learning player
+    def choose_comp_type(self, *args):
+        if hasattr(self, 'prev_comp_type'):     # only returns falls first time
+            if self.comp_type.get() != self.prev_comp_type:     # only do something if the choice has changed
+                self.prev_comp_type = self.comp_type.get()      # get the choice
+
+                self.game_controller.set_comp_type(self.prev_comp_type)     # set the type
+
+        else:
+            self.prev_comp_type = self.comp_type.get()  # get the choice
+
+            if self.prev_comp_type == 'perfect':    # this is the first time so only has changed if it switched to perfect
+                self.game_controller.set_comp_type(self.prev_comp_type)
 
     def forget(self):
         self.game_controller.forget()

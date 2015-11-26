@@ -21,6 +21,11 @@ class LearningPlayer:
         self.net.set_learning_rate(.002)
         self.net.set_momentum(.8)
 
+    def get_player(self):
+        return self.player
+
+    def set_player(self, player):
+        self.player = player
 
     # get the move from the neural network
     def make_move(self, board, learning = False):
@@ -94,6 +99,12 @@ class LearningPlayer:
 class PerfectPlayer:
     def __init__(self, player):
         self.player = player
+
+    def set_player(self, player):
+        self.player = player
+
+    def get_player(self):
+        return self.player
 
     # the move is decided using a minimax algorithm with alpha beta pruning
     def make_move(self, board):

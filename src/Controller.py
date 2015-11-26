@@ -1,15 +1,16 @@
-#! /usr/bin/env python
-
 from GUI import Display
 from GameState import Game
-from Constants import EMPTY, X, O, SIZE
+from Constants import EMPTY, X, O, SIZE, STRINGS
 from Players import LearningPlayer, PerfectPlayer
 
 class Controller:
     def __init__(self):
         self.curr_player = X    # whose turn is it?
 
-        self.computer_player = LearningPlayer(O)
+        # the computer players
+        self.learning_player = LearningPlayer(O)
+        self.perfect_player = PerfectPlayer(O)
+        self.computer_player = self.learning_player
 
         self.game = Game()  # new game/board
         
@@ -21,6 +22,8 @@ class Controller:
     def reset(self):
         self.curr_player = X
         self.game = Game()
+
+        if self.computer_player.get_player() == X: self.get_computer_move() # X goes first
 
     # Called by the GUI so this means a human moved. Update the game and get the computer's move
     def make_move(self, x, y):
@@ -55,19 +58,19 @@ class Controller:
 
         # Ideally we want it to learn until it gets every move right, but at somepoint we have to stop learning
         for i in range(20000):
-            self.computer_player.learn_all_known_boards()
+            self.learning_player.learn_all_known_boards()
             
             # see how many moves the machine got right and how many it got wrong
-            print 'Pass', i, 'correct_moves:', self.computer_player.passed_moves, 'incorrect moves:', self.computer_player.failed_moves
+            print 'Pass', i, 'correct_moves:', self.learning_player.passed_moves, 'incorrect moves:', self.learning_player.failed_moves
             
-            if not self.computer_player.failed_moves:   # got every move right!
+            if not self.learning_player.failed_moves:   # got every move right!
                 num_passes = i
                 break
 
         print '\n\nIt took', i, 'iterations but I learned all of the moves!\n\n'
 
     def forget(self):
-        self.computer_player.forget()
+        self.learning_player.forget()
 
         print '\n\nI just forgot how to play\n\n'
 
@@ -87,12 +90,22 @@ class Controller:
 
         return False    # game is not over
 
+    # set what player the computer player is (X or O)
+    def set_player(self, player):
+        self.learning_player.set_player(-1*STRINGS[player])
+        self.perfect_player.set_player(-1*STRINGS[player])
+
     # switch between whose turn it is
     def switch_player(self):
         if self.curr_player == X:
             self.curr_player = O
         else:
             self.curr_player = X
+
+    # set the type of computer player (learning or perfect)
+    def set_comp_type(self, comp_type):
+        if comp_type == 'perfect': self.computer_player = self.perfect_player
+        else: self.computer_player = self.learning_player
 
 if __name__ == '__main__':
     a = Controller()
