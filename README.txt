@@ -6,6 +6,10 @@ Simply press the buttons of the board to make moves. After every game press Lear
 
 You will notice that the game will open as well as a window called Terminal. Print outs regarding the learning process will be in the Terminal window. To exit the program close the game and quit the Terminal.
 
+Options:
+The left option allows you to choose between playing as X or O. X always has the first move.
+The right option allows you to choose to play against a perfect player or a learning player.
+
 Score:
 +2 points for a win
 -1 point for a tie
