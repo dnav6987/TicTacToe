@@ -7,9 +7,11 @@ class Display:
     def __init__(self, controller):
         # initialize the GUI
         self.app = Tk()
+        self.app.geometry('700x150')    # dimensions
         self.app.title('Tic Tac Toe')
+        self.app.configure(bg='SkyBlue4')   # set color
         self.app.resizable(width=False, height=False)
-        self.font = Font(family="Helvetica", size=32)
+        self.font = Font(family="Courier", weight='bold', size=32)
 
         self.game_controller = controller   # interface to the game
 
@@ -20,7 +22,7 @@ class Display:
         for x in range(SIZE):
             for y in range(SIZE):
                 handler = lambda x=x, y=y: self.move(x,y)   # each button corresponds to making a move in that square
-                self.buttons[x][y] = self.make_button(text='', command=handler, row=y, column=x+SIZE, width=1,)
+                self.buttons[x][y] = self.make_button(text='', command=handler, row=y, column=x+SIZE, width=1)
         
         # button to reset the board
         self.make_button(text='new game', command=lambda:self.reset(), row=SIZE+1, column=SIZE)
@@ -32,15 +34,15 @@ class Display:
         self.update()
 
         # the score labels
-        score = Label(self.app, text='    SCORE:', font=self.font)
+        score = Label(self.app, text='   SCORE:', font=self.font, bg='SkyBlue4', fg='white')
         score.grid(row=0, column=0, columnspan=SIZE)
-        self.score = Label(self.app, text='0', font=self.font)
+        self.score = Label(self.app, text='0', font=self.font, bg='SkyBlue4', fg='white')
         self.score.grid(row=1, column=1)
 
         # choose if you are X or O. X always goes first
         self.player_choice = StringVar()    # how to keep track of the option
         which_player = OptionMenu(self.app, self.player_choice, *(STRINGS[X], STRINGS[O])) # options are X and O
-        which_player.grid(row=SIZE+1,column=0)
+        which_player.grid(row=SIZE+1, column=0)
         self.player_choice.set('X')
         self.player_choice.trace('w', self.choose_player)
 
@@ -151,11 +153,11 @@ class Display:
             score -= 2
 
         if winner == None:
-            self.winner = Label(self.app, text="TIE", font=self.font)
+            self.winner = Label(self.app, text="TIE", font=self.font, bg='SkyBlue4', fg='white')
             score -= 1
         else:
             text = 'Player', winner_str, 'Wins!'
-            self.winner = Label(self.app, text=text, font=self.font)
+            self.winner = Label(self.app, text=text, font=self.font, bg='SkyBlue4', fg='white')
 
         self.winner.grid(row=1, column=3*SIZE, columnspan=SIZE, sticky="WE")
 
