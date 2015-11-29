@@ -7,12 +7,8 @@ class Display:
     def __init__(self, controller):
         # initialize the GUI
         self.app = Tk()
-        self.app.geometry('700x150')    # dimensions
         self.app.title('Tic Tac Toe')
-        self.app.configure(bg='SkyBlue4')   # set color
         self.app.resizable(width=False, height=False)
-        self.font = Font(family="Courier", weight='bold', size=32)
-
         self.game_controller = controller   # interface to the game
 
         self.winner = None  # who has won the game
@@ -25,33 +21,34 @@ class Display:
                 self.buttons[x][y] = self.make_button(text='', command=handler, row=y, column=x+SIZE, width=1)
         
         # button to reset the board
-        self.make_button(text='new game', command=lambda:self.reset(), row=SIZE+1, column=SIZE)
+        self.make_button(text='New Game', command=lambda:self.reset(), row=SIZE+1, column=SIZE)
         # button that makes the machine learn
-        self.make_button(text='learn', command=lambda:self.learn(), row=SIZE+1, column=SIZE+SIZE/2)
+        self.make_button(text='Learn', command=lambda:self.learn(), row=SIZE+1, column=SIZE+SIZE/2)
         # button that causes the machine to forget how to play
-        self.make_button(text='forget', command=lambda:self.forget(), row=SIZE+1, column=2*SIZE-1)
+        self.make_button(text='Forget', command=lambda:self.forget(), row=SIZE+1, column=2*SIZE-1)
 
         self.update()
 
         # the score labels
-        score = Label(self.app, text='   SCORE:', font=self.font, bg='SkyBlue4', fg='white')
+        score = Label(self.app, text=' SCORE:', font=Font(family="Courier", weight='bold', size=32))
         score.grid(row=0, column=0, columnspan=SIZE)
-        self.score = Label(self.app, text='0', font=self.font, bg='SkyBlue4', fg='white')
+        self.score = Label(self.app, text='0', font=Font(family="Courier", weight='bold', size=32))
         self.score.grid(row=1, column=1)
 
         # choose if you are X or O. X always goes first
         self.player_choice = StringVar()    # how to keep track of the option
         which_player = OptionMenu(self.app, self.player_choice, *(STRINGS[X], STRINGS[O])) # options are X and O
-        which_player.grid(row=SIZE+1, column=0)
+        which_player.grid(row=SIZE+2, column=SIZE+2)
+        which_player.config(font=Font(family='Courier'))
         self.player_choice.set('X')
         self.player_choice.trace('w', self.choose_player)
 
         # choose between playing against a Perfect player or Learning player
         self.comp_type = StringVar()    # how to keep track of the option
-        comp_type = OptionMenu(self.app, self.comp_type, *('learning', 'perfect'))
-        comp_type.grid(row=SIZE+1, column=1)
-        comp_type.config(width=8)
-        self.comp_type.set('learning')
+        comp_type = OptionMenu(self.app, self.comp_type, *('Learning', 'Perfect'))
+        comp_type.grid(row=SIZE+2, column=SIZE)
+        comp_type.config(width=11, font=Font(family='Courier'))
+        self.comp_type.set('Learning')
         self.comp_type.trace('w', self.choose_comp_type)
 
     def mainloop(self):
@@ -59,8 +56,8 @@ class Display:
 
     # make a new button
     def make_button(self, text, command, row, column, width=None):
-        if width: button = Button(self.app, text=text, command=command, width=width)
-        else: button = Button(self.app, text=text, command=command)
+        if width: button = Button(self.app, text=text, command=command, width=width, font=Font(family="Courier"))
+        else: button = Button(self.app, text=text, command=command, font=Font(family="Courier"))
         button.grid(row=row, column=column, columnspan=1)
         return button
 
@@ -91,7 +88,7 @@ class Display:
         else:
             self.prev_comp_type = self.comp_type.get()  # get the choice
 
-            if self.prev_comp_type == 'perfect':    # this is the first time so only has changed if it switched to perfect
+            if self.prev_comp_type == 'Perfect':    # this is the first time so only has changed if it switched to perfect
                 self.game_controller.set_comp_type(self.prev_comp_type)
 
     def forget(self):
@@ -153,11 +150,11 @@ class Display:
             score -= 2
 
         if winner == None:
-            self.winner = Label(self.app, text="TIE", font=self.font, bg='SkyBlue4', fg='white')
+            self.winner = Label(self.app, text="TIE", font=Font(family="Courier", weight='bold', size=32))
             score -= 1
         else:
             text = 'Player', winner_str, 'Wins!'
-            self.winner = Label(self.app, text=text, font=self.font, bg='SkyBlue4', fg='white')
+            self.winner = Label(self.app, text=text, font=Font(family="Courier", weight='bold', size=32))
 
         self.winner.grid(row=1, column=3*SIZE, columnspan=SIZE, sticky="WE")
 

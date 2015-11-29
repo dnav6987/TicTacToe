@@ -104,7 +104,7 @@ class Controller:
 
     # set the type of computer player (learning or perfect)
     def set_comp_type(self, comp_type):
-        if comp_type == 'perfect': self.computer_player = self.perfect_player
+        if comp_type == 'Perfect': self.computer_player = self.perfect_player
         else: self.computer_player = self.learning_player
 
 if __name__ == '__main__':
